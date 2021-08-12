@@ -39,6 +39,9 @@ class Vivado(Edatool):
                         {'name' : 'synth',
                          'type' : 'String',
                          'desc' : 'Synthesis tool. Allowed values are vivado (default) and yosys.'},
+                        {'name': 'ooc',
+                         'type': 'Boolean',
+                         'desc': 'Out of Context Synthesis. Allowed values are default (False) and out_of_context (True).'},
                         {'name' : 'pnr',
                          'type' : 'String',
                          'desc' : 'P&R tool. Allowed values are vivado (default) and none (to just run synthesis)'},
@@ -158,6 +161,7 @@ class Vivado(Edatool):
                              template_vars)
 
         jobs = self.tool_options.get('jobs', None)
+        ooc = self.tool_options.get('ooc', None)
 
         run_template_vars = {
             'jobs' : ' -jobs ' + str(jobs) if jobs is not None else ''
@@ -168,7 +172,8 @@ class Vivado(Edatool):
                              run_template_vars)
 
         synth_template_vars = {
-            'jobs' : ' -jobs ' + str(jobs) if jobs is not None else ''
+            'jobs' : ' -jobs ' + str(jobs) if jobs is not None else '',
+            'ooc': ooc
         }
 
         self.render_template('vivado-synth.tcl.j2',

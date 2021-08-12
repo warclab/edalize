@@ -5,14 +5,16 @@
 import os
 from setuptools import setup
 
+
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
+
 setup(
-    name = "edalize",
-    version = "0.2.5",
+    name="edalize",
+    version="0.2.6",
     packages=['edalize'],
-    package_data = {'edalize' : [
+    package_data={'edalize': [
         'templates/yosys/edalize_yosys_procs.tcl.j2',
         'templates/yosys/yosys-script-tcl.j2',
         'templates/spyglass/Makefile.j2',
@@ -37,12 +39,14 @@ setup(
         'templates/openlane/openlane-script-tcl.j2',
 
     ]},
-    author = "Olof Kindgren",
-    author_email = "olof.kindgren@gmail.com",
-    description = ("Edalize is a library for interfacing EDA tools, primarily for FPGA development"),
-    license = "BSD-2-Clause",
-    keywords = ["VHDL", "verilog", "EDA", "hdl", "rtl", "synthesis", "FPGA", "simulation", "Xilinx", "Altera"],
-    url = "https://github.com/olofk/edalize",
+    author="Olof Kindgren",
+    author_email="olof.kindgren@gmail.com",
+    description=(
+        "Edalize is a library for interfacing EDA tools, primarily for FPGA development"),
+    license="BSD-2-Clause",
+    keywords=["VHDL", "verilog", "EDA", "hdl", "rtl",
+              "synthesis", "FPGA", "simulation", "Xilinx", "Altera"],
+    url="https://github.com/olofk/edalize",
     long_description=read('README.rst'),
     classifiers=[
         "Development Status :: 4 - Beta",
