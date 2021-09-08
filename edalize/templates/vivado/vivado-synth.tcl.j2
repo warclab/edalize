@@ -1,6 +1,7 @@
 {% if ooc -%}
 synth_design -mode out_of_context -flatten_hierarchy rebuilt
-write_checkpoint [get_property DIRECTORY [current_project]]/[ get_property top [current_fileset] ].dcp -force
+puts [get_property NAME [current_project]]
+write_checkpoint [get_property DIRECTORY [current_project]]/[get_property NAME [current_project]].dcp -force
 {% else %}
 launch_runs synth_1{{ jobs }}
 wait_on_run synth_1

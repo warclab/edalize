@@ -1,11 +1,14 @@
 create_project -in_memory -part {{ tool_options.part }}
 
-{% for file in project.files %}
-add_files {{ file }}
-{% endfor %}
+# Static Top level
+synth_design -flatten_hierarchy rebuilt -top {{ project.top }} -part {{ tool_options.part }}
 
+{% for region in regions %}
 {% for module in modules %}
-set_property SCOPED_TO_CELLS {inst_shift} [get_files ./Synth/shift_right/shift_synth.dcp]
+set_property SCOPED_TO_CELLS { {{ region }} } [get_files ./Synth/shift_right/shift_synth.dcp]
+
+set_property RESET_AFTER_RECONFIG true [get_pblocks {{ region }} ]
+{% endfor %}
 {% endfor %}
 
 link_design -mode default -reconfig_partitions { {{ project.reconfig_partitions }} } -part {{ tool_options.part }} -top {{ project.top }} 
