@@ -1,0 +1,2 @@
+-notrace -mode batch -source test_vivado_partial_ooc_0.tcl
+-notrace -mode batch -source test_vivado_partial_ooc_0_run.tcl test_vivado_partial_ooc_0.xpr

@@ -258,6 +258,8 @@ Field Name       Type                  Description
 ================ ===================== ===========
 part             String                Device identifier. e.g. *xc7a35tcsg324-1*
 jobs             Integer               Number of jobs. Useful for parallelizing OOC (Out Of Context) syntheses.
+synth            String                Synthesis tool. Allowed values are vivado (default) and yosys.
+ooc              Bool               Out of Context Synthesis. Allowed values are default (False) and out_of_context (True).
 ================ ===================== ===========
 
 vunit

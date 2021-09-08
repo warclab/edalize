@@ -1,0 +1,2 @@
+-notrace -mode batch -source test_vivado_partial_prr_0.tcl
+-notrace -mode batch -source test_vivado_partial_prr_0_run.tcl test_vivado_partial_prr_0.xpr

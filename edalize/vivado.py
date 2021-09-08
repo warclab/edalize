@@ -24,6 +24,8 @@ A core (usually the system core) can add the following files:
 - IP: Supply the IP core xci file with file_type=xci and other files (like .prj)
       as file_type=user
 """
+
+
 class Vivado(Edatool):
 
     argtypes = ['vlogdefine', 'vlogparam', 'generic']
@@ -31,32 +33,32 @@ class Vivado(Edatool):
     @classmethod
     def get_doc(cls, api_ver):
         if api_ver == 0:
-            return {'description' : "The Vivado backend executes Xilinx Vivado to build systems and program the FPGA",
-                    'members' : [
-                        {'name' : 'part',
-                         'type' : 'String',
-                         'desc' : 'FPGA part number (e.g. xc7a35tcsg324-1)'},
-                        {'name' : 'synth',
-                         'type' : 'String',
-                         'desc' : 'Synthesis tool. Allowed values are vivado (default) and yosys.'},
+            return {'description': "The Vivado backend executes Xilinx Vivado to build systems and program the FPGA",
+                    'members': [
+                        {'name': 'part',
+                         'type': 'String',
+                         'desc': 'FPGA part number (e.g. xc7a35tcsg324-1)'},
+                        {'name': 'synth',
+                         'type': 'String',
+                         'desc': 'Synthesis tool. Allowed values are vivado (default) and yosys.'},
                         {'name': 'ooc',
-                         'type': 'Boolean',
+                         'type': 'Bool',
                          'desc': 'Out of Context Synthesis. Allowed values are default (False) and out_of_context (True).'},
-                        {'name' : 'pnr',
-                         'type' : 'String',
-                         'desc' : 'P&R tool. Allowed values are vivado (default) and none (to just run synthesis)'},
-                        {'name' : 'jobs',
-                         'type' : 'Integer',
-                         'desc' : 'Number of jobs. Useful for parallelizing OOC (Out Of Context) syntheses.'},
-                        {'name' : 'jtag_freq',
-                        'type' : 'Integer',
-                        'desc' : 'The frequency for jtag communication'},
-                        {'name' : 'source_mgmt_mode',
-                        'type' : 'String',
-                        'desc' : 'Source managment mode. Allowed values are None (unmanaged, default), DisplayOnly (automatically update sources) and All (automatically update sources and compile order)'},
-                        {'name' : 'hw_target',
-                        'type' : 'Description',
-                        'desc' : 'A pattern matching a board identifier. Refer to the Vivado documentation for ``get_hw_targets`` for details. Example: ``*/xilinx_tcf/Digilent/123456789123A``'},
+                        {'name': 'pnr',
+                         'type': 'String',
+                         'desc': 'P&R tool. Allowed values are vivado (default) and none (to just run synthesis)'},
+                        {'name': 'jobs',
+                         'type': 'Integer',
+                         'desc': 'Number of jobs. Useful for parallelizing OOC (Out Of Context) syntheses.'},
+                        {'name': 'jtag_freq',
+                         'type': 'Integer',
+                         'desc': 'The frequency for jtag communication'},
+                        {'name': 'source_mgmt_mode',
+                         'type': 'String',
+                         'desc': 'Source managment mode. Allowed values are None (unmanaged, default), DisplayOnly (automatically update sources) and All (automatically update sources and compile order)'},
+                        {'name': 'hw_target',
+                         'type': 'Description',
+                         'desc': 'A pattern matching a board identifier. Refer to the Vivado documentation for ``get_hw_targets`` for details. Example: ``*/xilinx_tcf/Digilent/123456789123A``'},
                     ]}
 
     """ Get tool version
@@ -64,11 +66,13 @@ class Vivado(Edatool):
     This gets the Vivado version by running vivado -version and
     parsing the output. If this command fails, "unknown" is returned
     """
+
     def get_version(self):
 
         version = "unknown"
         try:
-            vivado_text = subprocess.Popen(["vivado", "-version"], stdout=subprocess.PIPE, env=os.environ).communicate()[0]
+            vivado_text = subprocess.Popen(
+                ["vivado", "-version"], stdout=subprocess.PIPE, env=os.environ).communicate()[0]
             version_exp = r'Vivado.*(?P<version>v.*) \(.*'
 
             match = re.search(version_exp, str(vivado_text))
@@ -84,6 +88,7 @@ class Vivado(Edatool):
     sources, IPs and constraints and then writes them to the TCL file along
      with the build steps.
     """
+
     def configure_main(self):
 
         synth_tool = self.tool_options.get("synth", "vivado")
@@ -91,10 +96,10 @@ class Vivado(Edatool):
         if synth_tool == "yosys":
 
             self.edam['tool_options']['yosys'] = {
-                'arch' : 'xilinx',
-                'output_format' : 'edif',
-                'yosys_synth_options' : self.tool_options.get('yosys_synth_options', []),
-                'yosys_as_subtool' : True,
+                'arch': 'xilinx',
+                'output_format': 'edif',
+                'yosys_synth_options': self.tool_options.get('yosys_synth_options', []),
+                'yosys_as_subtool': True,
             }
 
             yosys = Yosys(self.edam, self.work_root)
@@ -143,17 +148,17 @@ class Vivado(Edatool):
                 unused_files.append(f)
 
         template_vars = {
-            'name'         : self.name,
-            'src_files'    : '\n'.join(src_files),
-            'incdirs'      : incdirs+['.'],
-            'tool_options' : self.tool_options,
-            'toplevel'     : self.toplevel,
-            'vlogparam'    : self.vlogparam,
-            'vlogdefine'   : self.vlogdefine,
-            'generic'      : self.generic,
-            'netlist_flow' : bool(edif_files),
-            'has_vhdl2008' : has_vhdl2008,
-            'has_xci'      : has_xci,
+            'name': self.name,
+            'src_files': '\n'.join(src_files),
+            'incdirs': incdirs+['.'],
+            'tool_options': self.tool_options,
+            'toplevel': self.toplevel,
+            'vlogparam': self.vlogparam,
+            'vlogdefine': self.vlogdefine,
+            'generic': self.generic,
+            'netlist_flow': bool(edif_files),
+            'has_vhdl2008': has_vhdl2008,
+            'has_xci': has_xci,
         }
 
         self.render_template('vivado-project.tcl.j2',
@@ -164,7 +169,7 @@ class Vivado(Edatool):
         ooc = self.tool_options.get('ooc', None)
 
         run_template_vars = {
-            'jobs' : ' -jobs ' + str(jobs) if jobs is not None else ''
+            'jobs': ' -jobs ' + str(jobs) if jobs is not None else ''
         }
 
         self.render_template('vivado-run.tcl.j2',
@@ -172,7 +177,7 @@ class Vivado(Edatool):
                              run_template_vars)
 
         synth_template_vars = {
-            'jobs' : ' -jobs ' + str(jobs) if jobs is not None else '',
+            'jobs': ' -jobs ' + str(jobs) if jobs is not None else '',
             'ooc': ooc
         }
 
@@ -185,12 +190,13 @@ class Vivado(Edatool):
 
         vivado_command = ['vivado', '-notrace', '-mode', 'batch', '-source']
 
-        #Create project file
+        # Create project file
         project_file = self.name+'.xpr'
         tcl_file = [self.name+'.tcl']
-        commands.add(vivado_command+tcl_file, [project_file], tcl_file + edif_files)
+        commands.add(vivado_command+tcl_file,
+                     [project_file], tcl_file + edif_files)
 
-        #Synthesis target
+        # Synthesis target
         if synth_tool == 'yosys':
             commands.commands += yosys.commands
             commands.add([], ['synth'], edif_files)
@@ -200,7 +206,7 @@ class Vivado(Edatool):
             commands.add(vivado_command+depends, targets, depends)
             commands.add([], ['synth'], targets)
 
-        #Bitstream generation
+        # Bitstream generation
         run_tcl = self.name+'_run.tcl'
         depends = [run_tcl, project_file]
         bitstream = self.name+'.bit'
@@ -239,6 +245,7 @@ class Vivado(Edatool):
     correct FPGA board and then downloads the bitstream. The tcl script is then
     executed in Vivado's batch mode.
     """
+
     def run_main(self):
         if 'pnr' in self.tool_options:
             if self.tool_options['pnr'] == 'vivado':
